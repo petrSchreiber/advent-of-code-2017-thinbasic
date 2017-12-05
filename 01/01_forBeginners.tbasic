@@ -1,0 +1,33 @@
+' This solution is very simplistic, unoptimized, makes one cry
+
+uses "file", "console"
+
+string input = file_load("data.txt")    
+input = rtrim$(input, $LF)                    
+
+printl GetCaptcha(input, 1)
+printl GetCaptcha(input, len(input)/2)
+waitkey   
+
+function GetCaptcha(input as string, lookupOffset as long)
+
+  long indexA, indexB, result, valueA, valueB
+  
+  for indexA = 1 to len(input)
+    valueA = val(mid$(input, indexA, 1))
+    
+    indexB = indexA + lookupOffset
+    while indexB > len(input)
+      indexB = indexB - len(input)
+    wend
+    
+    valueB = val(mid$(input, indexB, 1))
+    
+    if valueA = valueB then
+      result = result + valueA
+    end if
+  next
+  
+  return result
+
+end function

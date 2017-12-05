@@ -1,0 +1,40 @@
+' This solution is faster, with more advanced tricks
+
+uses "file", "console"
+
+string input = file_load("data.txt")    
+input = rtrim$(input, $LF)                    
+
+printl GetCaptcha(input, 1)
+printl GetCaptcha(input, len(input)/2)
+waitkey   
+
+function GetCaptcha(input as string, lookupOffset as long)
+  ' This overlays BYTE array over STRING memory
+  byte ascii(len(input)) at strptr(input)
+  long indexA, indexB, result, valueA, valueB, addedTimes  
+  
+  for indexA = 1 to len(input)
+    ' Reading ASCII value of character at position
+    valueA = ascii(indexA)
+    
+    indexB = indexA + lookupOffset
+    while indexB > len(input)
+      ' Short for indexB = indexB - len(input)
+      indexB -= len(input)
+    wend
+    
+    valueB = ascii(indexB)
+    
+    if valueA = valueB then
+      result += valueA
+      incr addedTimes ' Optimized addition of 1 to variable
+    end if
+  next
+  
+  result -= 48 * addedTimes ' Because ASCII of 0 starts as 48
+                            ' This is faster than subtracting 48 each time
+                            ' from ASCII value of indexA, indexB
+  return result
+
+end function
