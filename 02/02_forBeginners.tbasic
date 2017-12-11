@@ -1,0 +1,37 @@
+' This solution is very simplistic
+
+uses "stat", "console"
+
+string lines()
+parse(file "data.txt", lines, $lf)
+      
+printl getSum(lines, "getChecksum")
+
+waitkey   
+
+function getSum(lines() as string, funcName as string) as long
+  if len(funcName) = 0 then exit function
+  
+  long total, tempResult, i
+  
+  for i = 1 to countOf(lines)
+    ' Call function by name stored in string
+    call funcName(lines(i)) to tempResult
+    
+    total += tempResult
+  next
+  
+  return total
+
+end function
+
+function getChecksum(dataLine as string) as long
+  if len(dataLine) = 0 then return 0
+
+  ' Chop input line to array
+  long values()
+  parse(dataLine, values, $TAB)
+  
+  ' Use STAT module to determine array MAX and MIN values
+  return stat_max(values) - stat_min(values)
+end function
