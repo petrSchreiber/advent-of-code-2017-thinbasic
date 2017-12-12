@@ -6,6 +6,7 @@ string lines()
 parse(file "data.txt", lines, $lf)
       
 printl getSum(lines, "getChecksum")
+printl getSum(lines, "getResultOfEvenDivision")
 
 waitkey   
 
@@ -13,10 +14,14 @@ function getSum(lines() as string, funcName as string) as long
   if len(funcName) = 0 then exit function
   
   long total, tempResult, i
+  long values()  
   
-  for i = 1 to countOf(lines)
+  for i = 1 to countOf(lines) when len(lines(i)) ' Process just lines which are not empty
+    ' Chop input line to array    
+    parse(lines(i), values, $TAB)
+    
     ' Call function by name stored in string
-    call funcName(lines(i)) to tempResult
+    call funcName(values) to tempResult
     
     total += tempResult
   next
@@ -25,13 +30,29 @@ function getSum(lines() as string, funcName as string) as long
 
 end function
 
-function getChecksum(dataLine as string) as long
-  if len(dataLine) = 0 then return 0
-
-  ' Chop input line to array
-  long values()
-  parse(dataLine, values, $TAB)
-  
+function getChecksum(values() as long) as long
   ' Use STAT module to determine array MAX and MIN values
   return stat_max(values) - stat_min(values)
+end function
+
+function getResultOfEvenDivision(values() as long) as long
+  ' Sort from the biggest to the smallest
+  array sort values, descend
+  
+  long i, j
+  single division
+  
+  ' Try all the combinations
+  for i = 1 to countof(values)
+    for j = 1 to countof(values)
+      if i = j then iterate for
+      
+      division = values(i) / values(j)
+      if frac(division) = 0 then
+        return division
+      end if  
+    next
+  next
+  
+  ' Implicit return value in case of no even division found is 0  
 end function
