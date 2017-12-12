@@ -44,9 +44,7 @@ function getResultOfEvenDivision(values() as long) as long
   
   ' Try all the combinations
   for i = 1 to countof(values)
-    for j = 1 to countof(values)
-      if i = j then iterate for
-      
+    for j = i+1 to countof(values) ' No point going back, when ordered big to small
       division = values(i) / values(j)
       if frac(division) = 0 then
         return division
