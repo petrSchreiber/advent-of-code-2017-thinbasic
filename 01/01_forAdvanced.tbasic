@@ -1,8 +1,8 @@
 ' This solution is faster, with more advanced tricks
 
-uses "file", "console"
+uses "console"
 
-string input = file_load("data.txt")    
+string input = load_file("data.txt")    
 input = rtrim$(input, $LF)                    
 
 printl GetCaptcha(input, 1)
@@ -12,8 +12,8 @@ waitkey
 function GetCaptcha(input as string, lookupOffset as long)
   ' This overlays single char array over STRING memory
   dim digit(len(input)) as string *1 at strptr(input)
-  long indexA, indexB, result
   
+  long indexA, indexB, result
   for indexA = 1 to len(input)
     indexB = indexA + lookupOffset
     if indexB > len(input) then
@@ -21,7 +21,6 @@ function GetCaptcha(input as string, lookupOffset as long)
     end if  
     
     if digit(indexA) = digit(indexB) then result += digit(indexA)
-
   next
   
   return result
